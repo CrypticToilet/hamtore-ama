@@ -86,8 +86,9 @@
               class="red--text"
               v-show="isErrorLong || isErrorShort || isErrorSquare || error_records.length != 0"
             >問題が発見されました！</h1>
-            <h2>現在のポジション合計：{{ total_volume_in_table }} ( 最大値:{{ status_max_volume }} )</h2>
-            <span class="caption grey--text">*最大値はすべてのストラテジが同じ方向にエントリーした場合の合計値</span>
+            <h2>はむとれ上のポジション合計：{{ total_volume_in_table }} ( 最大値:{{ status_max_volume }} )</h2>
+            <div class="caption grey--text">*最大値はすべてのストラテジが同じ方向にエントリーした場合の合計値</div>
+            <div class="caption grey--text">*ポジション合計ははむとれhistory上の現在のポジション。実際の取引所ポジションと比較してズレていないか確認します。</div>
             <!--config.json エラーリスト-->
             <h4 v-if="this.error_config.length != 0" class="mt-2 yellow lighten">
               <v-badge color="red">
@@ -334,11 +335,11 @@
             </v-card-title>
 
             <v-card-text>
-              ドテン式(ノーポジションが存在しない)ストラテジ一覧ファイルです。
+              <b class="red--text">ドテン式(ノーポジションが存在しない)ストラテジ一覧ファイルです。</b>
               <br />現在のポジションボリュームが正常かどうかの計算に必要です。
               <v-card-text class="grey--text">
                 不要な場合は
-                <a href="#" @click="downloadDotenTableDummy()">空のファイル</a>をconfigフォルダに配置してください
+                <a href="#" @click="downloadDotenTableDummy()">空のファイル</a>をconfigフォルダに配置すると<br>このウィンドウが出なくなります。
               </v-card-text>
             </v-card-text>
 

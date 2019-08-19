@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-layout row wrap>
-      <v-flex xs12 class="my-4">
+      <v-flex xs12>
         <v-card class="white ma-2">
           <v-flex dark flat class="teal pa-1">
             <v-icon color="white">description</v-icon>
@@ -9,56 +9,22 @@
           </v-flex>
 
           <v-card-text>
-            <h3>
+            <h1>
+              <v-icon large color="blue">info</v-icon>ドテン式(ノーポジが無い)ストラテジのリストを作成します。ポジション計算に必須です。
+            </h1>
+            <div>※ドテン式の例：Vega, MotuStart, 00Amber, perno, UCSGEARS, viostore 等</div>
+            <h3 class="mt-3">
               <v-icon>check</v-icon>ドテンリスト作成手順
             </h3>
             <ol>
-              <li>"テーブルをロード"ボタンをクリックしてテーブルを読み込みます。</li>
+              <li><b class="red--text">"テーブルを読み込み"</b>ボタンをクリックしてStatusテーブルを読み込みます。</li>
               <li>
                 bF/MEXに登録されたストラテジ一覧が表示されます。
                 <b class="red--text">ドテン式のストラテジ全てのチェックボックスをオンにしてください。</b>
               </li>
-              <li>"ファイルに保存"ボタンを押すとチェックされているストラテジ名一覧(doten_list.json)がダウンロードされます。</li>
+              <li><b class="red--text">"ファイルに保存"</b>ボタンを押すとチェックされているストラテジ名一覧(doten_list.json)がダウンロードされます。</li>
               <li>ファイルがダウンロードされたら"config"フォルダにファイルをコピー(上書き)して はむとれ ama をリロードしてください。</li>
             </ol>
-          </v-card-text>
-
-          <v-card-text>
-            <h3>
-              <v-icon>check</v-icon>
-              <a href="#" @click="oritatami1 = !oritatami1">なぜドテン型のストラテジリストが必要なのですか？</a>
-              <v-icon v-if="!oritatami1">arrow_drop_down</v-icon>
-              <v-icon v-if="oritatami1">arrow_drop_up</v-icon>
-            </h3>
-            <v-card-text v-if="oritatami1">
-              はむとれのストラテジはON/OFF型（ロング・ショート・ノーポジ）ドテン型(ロング・ショート) の2種類です。
-              <br />全てのストラテジのVolumeが"1"に指定してあった場合はそれぞれ
-              <br />ON/OFF型： 1, 0, -1 (Status上のVolume:1)
-              <br />ドテン型: 1, -1 (Status上のVolume:2) いずれかのポジションとなります。
-              <br />はむとれ ama はStatus上のVolumeとドテン式かどうかで理論上のポジション範囲を計算してエラーを判断しています。
-              <br />従って ON/OFF型は Volume*1 , Volume*0, Volume*-1 のいずれかのポジション
-              <br />ドテン型は Volume*1/2, Volume*-1/2 のいずれかのポジション
-              <br />という比較で分ける必要があります。この兼ね合いでドテンリストを作っていないとhistory上に計上された値がエラーかどうかが判断できません。
-              <v-card-text class="grey--text">
-                ※はむとれ ama はピラミッディング型(同じ方向に何度もエントリーする)ストラテジの不整合チェックには対応しておりません。
-                <br />また、この仕組みでは不整合を100%発見することができません(全て拾うためにはpineをプログラムで解釈 or TVをスクレイピングする必要があり実装が困難です)
-              </v-card-text>
-            </v-card-text>
-          </v-card-text>
-
-          <v-card-text>
-            <h3>次のStatusテーブルが読み込まれます (IDがconfigにて設定済み)</h3>
-            <div v-if="passconfig.fusion_tables_id_status_bf != undefined">
-              <v-icon color="green">check_circle</v-icon>bitFlyer
-            </div>
-            <div v-if="passconfig.fusion_tables_id_status_bitmex != undefined">
-              <v-icon color="green">check_circle</v-icon>BitMEX
-            </div>
-            <div
-              v-if="passconfig.fusion_tables_id_status_bitmex === undefined && passconfig.fusion_tables_id_status_bitmex === undefined"
-            >
-              <v-icon color="red" class="ma-2">error</v-icon>エラー：bF/MEXどちらのテーブルIDも読み込まれませんでした。config.jsonが正しく作成されていない可能性があります。
-            </div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -108,6 +74,7 @@
             :items="strategies"
             class="elevation-1"
             :search="v_table_search"
+            :rows-per-page-items="[9999, 10, 20, 30]"
           >
             <template v-slot:items="props">
               <v-container>
@@ -129,15 +96,55 @@
             </template>
           </v-data-table>
         </v-card>
+
+        <v-card class="white ma-2 mt-4">
+          <v-card-text>
+            <h3>次のStatusテーブルが読み込まれます (IDがconfigにて設定済み)</h3>
+            <div v-if="passconfig.fusion_tables_id_status_bf != undefined">
+              <v-icon color="green">check_circle</v-icon>bitFlyer
+            </div>
+            <div v-if="passconfig.fusion_tables_id_status_bitmex != undefined">
+              <v-icon color="green">check_circle</v-icon>BitMEX
+            </div>
+            <div
+              v-if="passconfig.fusion_tables_id_status_bitmex === undefined && passconfig.fusion_tables_id_status_bitmex === undefined"
+            >
+              <v-icon color="red" class="ma-2">error</v-icon>エラー：bF/MEXどちらのテーブルIDも読み込まれませんでした。config.jsonが正しく作成されていない可能性があります。
+            </div>
+          </v-card-text>
+
+          <v-card-text>
+            <h3>
+              <v-icon>check</v-icon>
+              <a href="#" @click="oritatami1 = !oritatami1">なぜドテン型のストラテジリストが必要なのですか？</a>
+              <v-icon v-if="!oritatami1">arrow_drop_down</v-icon>
+              <v-icon v-if="oritatami1">arrow_drop_up</v-icon>
+            </h3>
+            <v-card-text v-if="oritatami1">
+              はむとれのストラテジはON/OFF型（ロング・ショート・ノーポジ）ドテン型(ロング・ショート) の2種類です。
+              <br />全てのストラテジのVolumeが"1"に指定してあった場合はそれぞれ
+              <br />ON/OFF型： 1, 0, -1 (Status上のVolume:1)
+              <br />ドテン型: 1, -1 (Status上のVolume:2) いずれかのポジションとなります。
+              <br />はむとれ ama はStatus上のVolumeとドテン式かどうかで理論上のポジション範囲を計算してエラーを判断しています。
+              <br />従って ON/OFF型は Volume*1 , Volume*0, Volume*-1 のいずれかのポジション
+              <br />ドテン型は Volume*1/2, Volume*-1/2 のいずれかのポジション
+              <br />という比較で分ける必要があります。この兼ね合いでドテンリストを作っていないとhistory上に計上された値がエラーかどうかが判断できません。
+              <v-card-text class="grey--text">
+                ※はむとれ ama はピラミッディング型(同じ方向に何度もエントリーする)ストラテジの不整合チェックには対応しておりません。
+                <br />また、この仕組みでは不整合を100%発見することができません(全て拾うためにはpineをプログラムで解釈 or TVをスクレイピングする必要があり実装が困難です)
+              </v-card-text>
+            </v-card-text>
+          </v-card-text>
+        </v-card>
       </v-flex>
     </v-layout>
 
     <!-- スナックバー -->
-    <v-snackbar class="ma-2" :top="true" v-model="snack" :timeout="timeout">
+    <v-snackbar class="ma-2" :top="false" v-model="snack" :timeout="timeout">
       <v-icon v-if="icon === 1" color="green" class="ma-2">check</v-icon>
       <v-icon v-if="icon === 2" color="red" class="ma-2">error</v-icon>
       {{ snack_text }}
-      <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
+      <v-btn color="blue" text @click="snack = false">Close</v-btn>
     </v-snackbar>
   </div>
 </template>
@@ -150,7 +157,7 @@ export default {
       snack: false,
       icon: 1, //スナックバーのアイコン用(直接テキストで指定する)
       icon_color: "red",
-      timeout: 3000, //スナックバー用
+      timeout: 0, //スナックバー用
       snack_text: "",
       oritatami1: false,
       v_table_search: "",
@@ -165,6 +172,9 @@ export default {
         { text: "Exchange", value: "6" },
         { text: "Order Type", value: "7" }
       ],
+      pagination: {
+        rowsPerPage: 9999
+      },
       doten_list: {},
       loading: false,
       strategies: [],
@@ -180,7 +190,7 @@ export default {
   created() {
     if (this.passconfig.encrypted_config != "") {
       //まだ暗号化解除されていないのでテーブルを読み込める状態ではないためログインへ遷移する
-      this.$emit('needLogin');
+      this.$emit("needLogin");
     }
   },
   methods: {
@@ -201,7 +211,7 @@ export default {
       }
 
       console.log("status取得：正常終了");
-      this.openSnack("読み込み完了 : status", 1);
+      this.openSnack("status読み込み完了 : ドテン式のストラテジをチェック後ファイルを保存します", 1);
       this.loading = false;
     },
     async getStatusSql(table) {
@@ -247,7 +257,7 @@ export default {
         })
         .catch(e => {
           console.log("doten_list.jsonは見つかりませんでした。");
-          this.openSnack("読み込み失敗 : doten_list.json", 2);
+          this.openSnack("読み込み失敗 : doten_list.json (この機能は既にdoten_list.jsonが配置してある場合にのみ有効です)", 2);
         });
       this.loading = false;
     },
@@ -278,7 +288,7 @@ export default {
         link.click();
 
         this.openSnack(
-          "ダウンロードしました。configフォルダへコピーしてください。",
+          "doten_list.jsonはconfigフォルダへコピーして下さい。その後はむとれ amaをリロードします。",
           1
         );
       } catch {

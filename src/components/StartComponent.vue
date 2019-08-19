@@ -8,7 +8,12 @@
             <span class="title white--text px-2">Config File Maker</span>
             <span class="caption mx-2 white--text">設定ファイル(config.json)を作成します</span>
           </v-flex>
-
+          <v-flex dark flat class="pa-4">
+            <h1>config.jsonファイルを作成します</h1>
+            <h1>ダウンロードされますので"config"フォルダへコピーします</h1>
+            <div>※メイン画面(ダッシュボード)を使用するにはconfig.jsonファイルが必要です</div>
+            <div>※ファイルコピー後に再読み込みしてください</div>
+          </v-flex>
           <v-form class="mx-4" ref="form">
             <v-text-field
               class="mx-1 mt-4"
@@ -153,7 +158,7 @@
             </h4>
           </v-card-text>
           <v-card-text>
-            <h4>OKを押すとファイルが「ダウンロード」されます。 "config" フォルダ内へ上書き保存してください。</h4>
+            <h4>ダウンロードボタンを押すとファイルが「ダウンロード」されます。 "config" フォルダ内へ上書き保存してください。</h4>
           </v-card-text>
           <!-- 接続テスト -->
           <v-card-text>
@@ -221,7 +226,9 @@
               <p>コードはStartComponent.vueのdownloadFileメソッド内で暗号化処理されております。</p>
             </div>
           </v-card-text>
-
+          <v-card-text v-show="isTestOK">
+            <h2 class="red--text">config.jsonは"config" フォルダ内へ上書き保存します</h2>
+          </v-card-text>
           <v-card-actions class="pa-4">
             <v-spacer></v-spacer>
             <v-checkbox v-model="isTestOK" class="shrink mr-2" label="接続テスト確認"></v-checkbox>
@@ -230,13 +237,21 @@
               :disabled="!isTestOK"
               text
               @click="dialog = false;downloadFile()"
-            >OK</v-btn>
+            >ダウンロード</v-btn>
             <v-btn color="error" text @click="dialog = false">キャンセル</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-layout>
     <!-- ダイアログここまで -->
+
+    <!-- スナックバー -->
+    <v-snackbar class="ma-2" :top="false" v-model="snack" :timeout="timeout">
+      <v-icon v-if="icon === 1" color="green" class="ma-2">check</v-icon>
+      <v-icon v-if="icon === 2" color="red" class="ma-2">error</v-icon>
+      {{ snack_text }}
+      <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
 
     <!-- おまけ -->
     <v-layout row justify-center>
@@ -271,7 +286,11 @@ export default {
   components: { HowToPermit, HowToMakeApiKey },
   data() {
     return {
-      oritatami1: false,//折りたたみ：技術情報とリスク
+      snack: false, //スナックバー用
+      snack_text: "", //スナックバー用
+      timeout: 0, //スナックバー用
+      icon: 1, //スナックバー用
+      oritatami1: false, //折りたたみ：技術情報とリスク
       loading: false,
       isTestOK: false, //最後の接続テストが全部完了したか。チェックボックスをオンにすれば強制的にファイル出力もいける
       test_password: "", //後で削除
@@ -509,9 +528,21 @@ export default {
         link.href = window.URL.createObjectURL(blob);
         link.download = "config.json";
         link.click();
+
+        
+      this.openSnack("config.jsonがダウンロードされます。configフォルダへ保存後、ページを再読み込みしてください",1);
+
       } catch {
         console.log("error:暗号化処理中になんらかのエラー");
       }
+
+    },
+    openSnack(text, icon) {
+      this.icon = icon; //v-iconの指定 1:check 2:error
+      //メモ icon は{{}}で直接テキストで指定できるが、olorをv-bindで指定できない仕様なのでこの方法にする
+      this.snack = false;
+      this.snack_text = text;
+      this.snack = true;
     }
   }, //methods
   computed: {

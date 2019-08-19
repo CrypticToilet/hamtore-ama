@@ -6,7 +6,7 @@
         <span>はむとれ ama</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <span class="mr-2">Ver. 1.0.0</span>
+      <span class="mr-2">Ver. 1.0.1</span>
     </v-toolbar>
 
     <v-content class="mx-4 my-4">
