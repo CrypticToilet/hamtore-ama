@@ -33,7 +33,7 @@
     <v-snackbar class="ma-2" :top="true" v-model="snack" :timeout="timeout">
       <v-icon color="yellow" class="ma-2">warning</v-icon>
       {{ text }}
-      <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
+      <v-btn color="blue" text @click="snack = false">Close</v-btn>
     </v-snackbar>
   </div>
 </template>

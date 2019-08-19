@@ -319,7 +319,7 @@
         <v-icon v-if="icon === 1" color="green" class="ma-2">check</v-icon>
         <v-icon v-if="icon === 2" color="red" class="ma-2">error</v-icon>
         {{ snack_text }}
-        <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
+        <v-btn color="blue" text @click="snack = false">Close</v-btn>
       </v-snackbar>
 
       <!-- ダイアログ -->

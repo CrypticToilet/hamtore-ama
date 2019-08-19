@@ -9,9 +9,9 @@
             <span class="caption mx-2 white--text">設定ファイル(config.json)を作成します</span>
           </v-flex>
           <v-flex dark flat class="pa-4">
-            <h1>config.jsonファイルを作成します</h1>
+            <h1>起動に必要な設定ファイルを作成します(config.json)</h1>
             <h1>ダウンロードされますので"config"フォルダへコピーします</h1>
-            <div>※メイン画面(ダッシュボード)を使用するにはconfig.jsonファイルが必要です</div>
+            <div>※メイン画面(ダッシュボード)を使用するにはconfig.jsonファイルが必須です</div>
             <div>※ファイルコピー後に再読み込みしてください</div>
           </v-flex>
           <v-form class="mx-4" ref="form">
@@ -227,7 +227,7 @@
             </div>
           </v-card-text>
           <v-card-text v-show="isTestOK">
-            <h2 class="red--text">config.jsonは"config" フォルダ内へ上書き保存します</h2>
+            <h2 class="red--text">ダウンロードされたファイルは"config" フォルダ内へ上書き保存して下さい</h2>
           </v-card-text>
           <v-card-actions class="pa-4">
             <v-spacer></v-spacer>
@@ -250,7 +250,7 @@
       <v-icon v-if="icon === 1" color="green" class="ma-2">check</v-icon>
       <v-icon v-if="icon === 2" color="red" class="ma-2">error</v-icon>
       {{ snack_text }}
-      <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
+      <v-btn color="blue" text @click="snack = false">Close</v-btn>
     </v-snackbar>
 
     <!-- おまけ -->
